@@ -1,4 +1,5 @@
 #include "vectors_sum.cuh"
+#include "benchmark.cuh"
 #include <stdio.h>
 
 __global__ static void kernel(uint32_t *a, uint32_t *b, size_t N)
@@ -21,42 +22,41 @@ cudaError_t vectors_sum(uint32_t *h_a, uint32_t *h_b, uint32_t N)
     uint32_t *d_b;
 
     cudaError_t err;
-    CUDA_EVENT_CREATE();
+    Benchmark benchmark;
 
-    CUDA_EVENT_RECORD(start);
+    benchmark.record();
     err = cudaMalloc(&d_a, N_bytes);
     if (err != cudaError::cudaSuccess)
         return err;
     err = cudaMalloc(&d_b, N_bytes);
     if (err != cudaError::cudaSuccess)
         return err;
-    CUDA_EVENT_ELAPSED(time, start, stop);
-    printf("cudaMalloc elapsed time:  %0.3f ms\n", time);
+    printf("cudaMalloc elapsed time:  %0.3f ms\n", benchmark.elapsed());
 
-    CUDA_EVENT_RECORD(start);
+    benchmark.record();
     err = cudaMemcpy(d_a, h_a, N_bytes, cudaMemcpyHostToDevice);
     if (err != cudaError::cudaSuccess)
         return err;
     err = cudaMemcpy(d_b, h_b, N_bytes, cudaMemcpyHostToDevice);
     if (err != cudaError::cudaSuccess)
         return err;
-    CUDA_EVENT_ELAPSED(time, start, stop);
-    printf("cudaMemcpyHostToDevice elapsed time:  %0.3f ms\n", time);
+    printf("cudaMemcpyHostToDevice elapsed time:  %0.3f ms\n", benchmark.elapsed());
 
-    CUDA_EVENT_RECORD(start);
+    benchmark.record();
     kernel<<<gridSize, blockSize>>>(d_a, d_b, N);
     err = cudaDeviceSynchronize();
     if (err != cudaError::cudaSuccess)
         return err;
-    CUDA_EVENT_ELAPSED(time, start, stop);
-    printf("kernel elapsed time:  %0.3f ms\n", time);
+    printf("kernel elapsed time:  %0.3f ms\n", benchmark.elapsed());
 
-    CUDA_EVENT_RECORD(start);
+    benchmark.record();
     err = cudaMemcpy(h_a, d_a, N_bytes, cudaMemcpyDeviceToHost);
     if (err != cudaError::cudaSuccess)
         return err;
-    CUDA_EVENT_ELAPSED(time, start, stop);
-    printf("cudaMemcpyDeviceToHost elapsed time:  %0.3f ms\n", time);
+    printf("cudaMemcpyDeviceToHost elapsed time:  %0.3f ms\n", benchmark.elapsed());
+
+    cudaFree(d_a);
+    cudaFree(d_b);
 
     return cudaError::cudaSuccess;
 }
