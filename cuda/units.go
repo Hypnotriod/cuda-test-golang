@@ -1,7 +1,7 @@
 package cuda
 
 /*
-#cgo LDFLAGS: -lvectors_sum -L${SRCDIR}/../bin
+#cgo LDFLAGS: -llibrary -L${SRCDIR}/../bin
 
 #include <stdlib.h>
 #include <stdint.h>
