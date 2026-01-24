@@ -14,7 +14,7 @@ __global__ static void kernel(uint32_t *a, uint32_t *b, size_t N)
     }
 }
 
-cudaError_t vectors_sum(uint32_t *h_a, uint32_t *h_b, uint32_t N)
+cudaError_t vector_add_uint32(uint32_t *h_a, uint32_t *h_b, uint32_t N)
 {
     size_t N_bytes = N * sizeof(uint32_t);
     size_t blockSize = 1024;
@@ -33,7 +33,7 @@ cudaError_t vectors_sum(uint32_t *h_a, uint32_t *h_b, uint32_t N)
     err = cudaMalloc(&d_b, N_bytes);
     if (err != cudaError::cudaSuccess)
         return err;
-    printf("cudaMalloc elapsed time:  %0.3f ms\n", benchmark.elapsed());
+    printf("cudaMalloc elapsed time: %0.3f ms\n", benchmark.elapsed());
 
     benchmark.record();
     err = cudaMemcpy(d_a, h_a, N_bytes, cudaMemcpyHostToDevice);
@@ -42,20 +42,20 @@ cudaError_t vectors_sum(uint32_t *h_a, uint32_t *h_b, uint32_t N)
     err = cudaMemcpy(d_b, h_b, N_bytes, cudaMemcpyHostToDevice);
     if (err != cudaError::cudaSuccess)
         return err;
-    printf("cudaMemcpyHostToDevice elapsed time:  %0.3f ms\n", benchmark.elapsed());
+    printf("cudaMemcpyHostToDevice elapsed time: %0.3f ms\n", benchmark.elapsed());
 
     benchmark.record();
     kernel<<<gridSize, blockSize>>>(d_a, d_b, N);
     err = cudaDeviceSynchronize();
     if (err != cudaError::cudaSuccess)
         return err;
-    printf("kernel elapsed time:  %0.3f ms\n", benchmark.elapsed());
+    printf("kernel elapsed time: %0.3f ms\n", benchmark.elapsed());
 
     benchmark.record();
     err = cudaMemcpy(h_a, d_a, N_bytes, cudaMemcpyDeviceToHost);
     if (err != cudaError::cudaSuccess)
         return err;
-    printf("cudaMemcpyDeviceToHost elapsed time:  %0.3f ms\n", benchmark.elapsed());
+    printf("cudaMemcpyDeviceToHost elapsed time: %0.3f ms\n", benchmark.elapsed());
 
     cudaFree(d_a);
     cudaFree(d_b);

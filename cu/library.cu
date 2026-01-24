@@ -1,3 +1,3 @@
 #include "library.cuh"
-#include "pinnedmemory.cuh"
-#include "vectors_sum.cuh"
+#include "pinned_memory.cuh"
+#include "vector_add.cuh"

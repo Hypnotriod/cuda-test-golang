@@ -9,37 +9,52 @@ int free_host(uint8_t **ptr);
 */
 import "C"
 import (
-	"reflect"
 	"unsafe"
 )
 
 type PinnedMemory[T any] struct {
-	p       *C.uint8_t
-	length  int
-	invalid bool
+	ptr    *C.uint8_t
+	length uint
+	size   uint
+	valid  bool
 }
 
-func PinnedMemoryNew[T any](length int) (*PinnedMemory[T], CudaError) {
+func PinnedMemoryNew[T any](length uint) (*PinnedMemory[T], CudaError) {
 	var v T
-	t := reflect.TypeOf(v)
 	m := &PinnedMemory[T]{
 		length: length,
+		size:   uint(unsafe.Sizeof(v)),
 	}
-	err := C.malloc_host(&m.p, C.size_t(length*int(t.Size())))
+	err := C.malloc_host(&m.ptr, C.size_t(length*m.size))
+	if CudaError(err) == CudaSuccess {
+		m.valid = true
+	}
 	return m, CudaError(err)
 }
 
 func (m *PinnedMemory[T]) Slice() []T {
-	if m.invalid {
+	if !m.valid {
 		var slice []T
 		return slice
 	}
-	var array *T = (*T)(unsafe.Pointer(m.p))
-	return unsafe.Slice(array, m.length)
+	var ptr *T = (*T)(unsafe.Pointer(m.ptr))
+	return unsafe.Slice(ptr, m.length)
 }
 
 func (m *PinnedMemory[T]) Free() CudaError {
-	m.invalid = true
-	err := C.free_host(&m.p)
+	m.valid = false
+	err := C.free_host(&m.ptr)
 	return CudaError(err)
+}
+
+func (m *PinnedMemory[T]) Valid() bool {
+	return m.valid
+}
+
+func (m *PinnedMemory[T]) Size() uint {
+	return m.size
+}
+
+func (m *PinnedMemory[T]) Length() uint {
+	return m.length
 }
