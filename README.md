@@ -2,13 +2,11 @@
 
 Test of how to build and call the `CUDA` library from `Golang`.
 
-## Installation
-[CUDA Toolkit 13.1 Downloads](https://developer.nvidia.com/cuda-downloads)
-
-# Windows
+## Installation Windows
 [Installation Guide Windows](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/)
 * Install the [Visual Studio Community Edition](https://visualstudio.microsoft.com/vs/community/) 
 * Add the `Microsoft C++ Build Tools` to the `PATH` at `System Environment Variables`, ex.: `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\bin\Hostx64\x64`
+* Install the [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)
 * (Optionally) Install the [w64devkit](https://github.com/skeeto/w64devkit/releases/latest) for the `C/C++` build tools and standard unix utilities.
 
 ## CUDA
