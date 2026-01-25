@@ -1,11 +1,11 @@
 package cuda
 
 /*
-#include <stdlib.h>
 #include <stdint.h>
+#include "cuda_types.h"
 
-int malloc_host(uint8_t **ptr, size_t size);
-int free_host(uint8_t **ptr);
+cudaError_t malloc_host(uint8_t **ptr, size_t size);
+cudaError_t free_host(uint8_t **ptr);
 */
 import "C"
 import (
@@ -25,7 +25,7 @@ func PinnedMemoryNew[T any](length uint) (*PinnedMemory[T], CudaError) {
 		length: length,
 		size:   uint(unsafe.Sizeof(v)),
 	}
-	err := C.malloc_host(&m.ptr, C.size_t(length*m.size))
+	err := C.malloc_host(&m.ptr, C.size_t(m.length*m.size))
 	if CudaError(err) == CudaSuccess {
 		m.valid = true
 	}

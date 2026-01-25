@@ -1,12 +1,10 @@
 package cuda
 
 /*
-#cgo LDFLAGS: -llibrary -L${SRCDIR}/../bin
-
-#include <stdlib.h>
 #include <stdint.h>
+#include "cuda_types.h"
 
-int vector_add_uint32(uint32_t *a, uint32_t *b, uint32_t N);
+cudaError_t vector_add_uint32(uint32_t *a, uint32_t *b, uint32_t N);
 */
 import "C"
 
