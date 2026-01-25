@@ -10,8 +10,8 @@ Test of how to build and call the `CUDA` library from `Golang`.
 * (Optionally) Install the [w64devkit](https://github.com/skeeto/w64devkit/releases/latest) for the `C/C++` build tools and standard unix utilities.
 
 ## CUDA
-[CUDA Samples](https://github.com/NVIDIA/cuda-samples)
-[Compute Capabilities](https://docs.nvidia.com/cuda/cuda-programming-guide/05-appendices/compute-capabilities.html)
+[CUDA Samples](https://github.com/NVIDIA/cuda-samples)  
+[Compute Capabilities](https://docs.nvidia.com/cuda/cuda-programming-guide/05-appendices/compute-capabilities.html)  
 * Check CUDA installation
 ```sh
 # Version of the Nvidia CUDA Compiler (nvcc)
