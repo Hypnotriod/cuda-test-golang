@@ -62,3 +62,21 @@ cudaError_t vector_add_uint32(uint32_t *h_a, uint32_t *h_b, uint32_t N)
 
     return cudaError::cudaSuccess;
 }
+
+cudaError_t vector_add_uint32_mapped(uint32_t *a, uint32_t *b, uint32_t N)
+{
+    size_t blockSize = 1024;
+    size_t gridSize = (N + blockSize - 1) / blockSize;
+
+    cudaError_t err;
+    Benchmark benchmark;
+
+    benchmark.record();
+    kernel<<<gridSize, blockSize>>>(a, b, N);
+    err = cudaDeviceSynchronize();
+    if (err != cudaError::cudaSuccess)
+        return err;
+    printf("kernel elapsed time: %0.3f ms\n", benchmark.elapsed());
+
+    return cudaError::cudaSuccess;
+}

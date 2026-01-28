@@ -25,12 +25,12 @@ func verify(a []uint32, b []uint32) {
 func main() {
 	const N = 1024 * 1024 * 128
 
-	pinnedMemA, err := cuda.NewPinnedMemory[uint32](N)
+	pinnedMemA, err := cuda.NewPinnedMemory[uint32](N, cuda.CudaHostAllocMapped)
 	if err != cuda.CudaSuccess {
 		log.Fatal("Unable to allocate pinned memory. Error code:", err)
 	}
 	defer pinnedMemA.Free()
-	pinnedMemB, err := cuda.NewPinnedMemory[uint32](N)
+	pinnedMemB, err := cuda.NewPinnedMemory[uint32](N, cuda.CudaHostAllocMapped)
 	if err != cuda.CudaSuccess {
 		log.Fatal("Unable to allocate pinned memory. Error code:", err)
 	}
@@ -52,7 +52,7 @@ func main() {
 	fmt.Printf("computeOnHost elapsed time: %0.3f ms\n", float64(time.Since(start).Microseconds())/1000.0)
 
 	start = time.Now()
-	if err := cuda.VectorAddUint32(a, b); err != cuda.CudaSuccess {
+	if err := cuda.VectorAddUint32Mapped(a, b); err != cuda.CudaSuccess {
 		log.Fatal("Unable to perform vector add. Error code:", err)
 	}
 	fmt.Printf("cuda.VectorAddUint32() elapsed time: %0.3f ms\n", float64(time.Since(start).Microseconds())/1000.0)

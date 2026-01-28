@@ -4,7 +4,7 @@ package cuda
 #include <stdint.h>
 #include "cuda_types.h"
 
-cudaError_t malloc_host(uint8_t **ptr, size_t size);
+cudaError_t malloc_host(uint8_t **ptr, size_t size, uint32_t flags);
 cudaError_t free_host(uint8_t **ptr);
 */
 import "C"
@@ -17,15 +17,30 @@ type PinnedMemory[T any] struct {
 	length uint
 	size   uint
 	valid  bool
+	flags  PinnedMemoryFlag
 }
 
-func NewPinnedMemory[T any](length uint) (*PinnedMemory[T], CudaError) {
+type PinnedMemoryFlag uint32
+
+const (
+	// Default page-locked allocation flag
+	CudaHostAllocDefault PinnedMemoryFlag = 0x00
+	// Pinned memory accessible by all CUDA contexts
+	CudaHostAllocPortable PinnedMemoryFlag = 0x01
+	// Map allocation into device space
+	CudaHostAllocMapped PinnedMemoryFlag = 0x02
+	// Write-combined memory
+	CudaHostAllocWriteCombined PinnedMemoryFlag = 0x04
+)
+
+func NewPinnedMemory[T any](length uint, flags PinnedMemoryFlag) (*PinnedMemory[T], CudaError) {
 	var v T
 	m := &PinnedMemory[T]{
 		length: length,
 		size:   uint(unsafe.Sizeof(v)),
+		flags:  flags,
 	}
-	err := C.malloc_host(&m.ptr, C.size_t(m.length*m.size))
+	err := C.malloc_host(&m.ptr, C.size_t(m.length*m.size), C.uint32_t(m.flags))
 	if CudaError(err) == CudaSuccess {
 		m.valid = true
 	}
@@ -57,4 +72,8 @@ func (m *PinnedMemory[T]) Size() uint {
 
 func (m *PinnedMemory[T]) Length() uint {
 	return m.length
+}
+
+func (m *PinnedMemory[T]) Flags() PinnedMemoryFlag {
+	return m.Flags()
 }
