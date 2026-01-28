@@ -19,7 +19,7 @@ type PinnedMemory[T any] struct {
 	valid  bool
 }
 
-func PinnedMemoryNew[T any](length uint) (*PinnedMemory[T], CudaError) {
+func NewPinnedMemory[T any](length uint) (*PinnedMemory[T], CudaError) {
 	var v T
 	m := &PinnedMemory[T]{
 		length: length,

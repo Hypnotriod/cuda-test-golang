@@ -25,12 +25,12 @@ func verify(a []uint32, b []uint32) {
 func main() {
 	const N = 1024 * 1024 * 128
 
-	pinnedMemA, err := cuda.PinnedMemoryNew[uint32](N)
+	pinnedMemA, err := cuda.NewPinnedMemory[uint32](N)
 	if err != cuda.CudaSuccess {
 		log.Fatal("Unable to allocate pinned memory. Error code:", err)
 	}
 	defer pinnedMemA.Free()
-	pinnedMemB, err := cuda.PinnedMemoryNew[uint32](N)
+	pinnedMemB, err := cuda.NewPinnedMemory[uint32](N)
 	if err != cuda.CudaSuccess {
 		log.Fatal("Unable to allocate pinned memory. Error code:", err)
 	}
