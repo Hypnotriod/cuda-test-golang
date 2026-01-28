@@ -75,5 +75,5 @@ func (m *PinnedMemory[T]) Length() uint {
 }
 
 func (m *PinnedMemory[T]) Flags() PinnedMemoryFlag {
-	return m.Flags()
+	return m.flags
 }
