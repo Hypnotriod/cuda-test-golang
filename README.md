@@ -19,7 +19,7 @@ nvcc --version
 # NVIDIA System Management Interface
 nvidia-smi
 # Obtain the GPU Compute Capability
-nvidia-smi --query-gpu=name,compute_cap
+nvidia-smi --query-gpu=name,compute_cap --format=csv
 ```
 
 ## Build and Run
