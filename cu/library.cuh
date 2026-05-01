@@ -2,10 +2,22 @@
 
 #include <stdint.h>
 
-#ifdef CUDADLL_EXPORTS
-#define DLLEXPORT __declspec(dllexport)
+#if defined(_MSC_VER)
+    #define EXPORT __declspec(dllexport)
+    #define IMPORT __declspec(dllimport)
+#elif defined(__GNUC__)
+    #define EXPORT __attribute__((visibility("default")))
+    #define IMPORT __attribute__((visibility("default")))
 #else
-#define DLLEXPORT __declspec(dllimport)
+    #define EXPORT
+    #define IMPORT
+    #pragma warning Unknown dynamic link import/export semantics.
+#endif
+
+#ifdef CUDADLL_EXPORTS
+    #define DLLEXPORT EXPORT
+#else
+    #define DLLEXPORT IMPORT
 #endif
 
 extern "C" DLLEXPORT cudaError_t malloc_host(uint8_t **ptr, size_t size, uint32_t flags);
