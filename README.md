@@ -1,6 +1,6 @@
 # cuda-test-golang
 
-Test of how to build and call the `CUDA` library from `Golang`.
+Test project of how to build and call the `CUDA` library from `Golang`.
 
 ## Installation Windows
 [Installation Guide Windows](https://docs.nvidia.com/cuda/cuda-installation-guide-microsoft-windows/)
@@ -8,6 +8,24 @@ Test of how to build and call the `CUDA` library from `Golang`.
 * Add the `Microsoft C++ Build Tools` to the `PATH` at `System Environment Variables`, ex.: `C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\bin\Hostx64\x64`
 * Install the [CUDA Toolkit](https://developer.nvidia.com/cuda-downloads)
 * (Optionally) Install the [w64devkit](https://github.com/skeeto/w64devkit/releases/latest) for the `C/C++` build tools and standard unix utilities.
+
+## Go installation Linux
+Download the `.tar.gz` archive for your architecture from [Latest Go toolchain builds](https://go.dev/dl/)  
+Remove all the previous installations and extract the archive:  
+```shell
+sudo rm -rf /usr/local/go
+sudo rm -rf /usr/bin/go
+sudo tar -C /usr/local -xzf go1.*.*.linux-*.tar.gz
+```
+Update `~/.bashrc` with
+```shell
+export PATH=$PATH:/usr/local/go/bin
+```
+Apply changes and check go version
+```shell
+source ~/.bashrc
+go version
+```
 
 ## CUDA
 [CUDA Samples](https://github.com/NVIDIA/cuda-samples)  
