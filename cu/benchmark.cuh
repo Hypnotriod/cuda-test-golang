@@ -13,6 +13,12 @@ public:
         cudaEventCreate(&stop);
     }
 
+    ~Benchmark()
+    {
+        cudaEventDestroy(start);
+        cudaEventDestroy(stop);
+    }
+
     void record()
     {
         cudaEventRecord(start, 0);
